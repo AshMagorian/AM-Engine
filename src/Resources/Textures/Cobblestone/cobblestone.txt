@@ -1,0 +1,7 @@
+Cobblestone
+diff_map cobblestone_floor_08_diff_1k.png
+n_map cobblestone_floor_08_nor_1k.png
+m 0.0
+r_map cobblestone_floor_08_rough_1k.png
+ao_map cobblestone_floor_08_ao_1k.png
+disp_map cobblestone_floor_08_disp_1k.png

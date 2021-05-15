@@ -1,0 +1,6 @@
+metal_plate
+diff_map metal_plate_diff.png
+n_map metal_plate_nor.png
+m_map metal_plate_spec.png
+r_map metal_plate_rough.png
+ao_map metal_plate_AO.png

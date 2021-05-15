@@ -1,0 +1,257 @@
+{
+	"scene" : 
+	{
+		"camera" : "MainCamera",
+		"cubeMapName" : "bg",
+		"entities" : 
+		[
+			{
+				"components" : 
+				[
+					{
+						"componentType" : "Transform",
+						"position" : 
+						[
+							-7.9346938133239746,
+							2.9736778736114502,
+							5.9032416343688965
+						],
+						"rotation" : 
+						[
+							-2.3000051975250244,
+							-42.800010681152344,
+							0.0
+						],
+						"scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					{
+						"componentType" : "FirstPersonCameraControls"
+					}
+				],
+				"entityName" : "MainCamera"
+			},
+			{
+				"components" : 
+				[
+					{
+						"componentType" : "Transform",
+						"position" : 
+						[
+							0.0,
+							3.0950000286102295,
+							0.0
+						],
+						"rotation" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					{
+						"assimp" : "backpack_obj",
+						"componentType" : "Renderer",
+						"parallaxClipBorders" : false,
+						"parallaxHeight" : 0.10000000149011612,
+						"parallaxMax" : 32,
+						"parallaxMin" : 8,
+						"pbrMat" : 
+						{
+							"albedo" : "",
+							"ao" : "",
+							"displacement" : "",
+							"metallic" : 0.0,
+							"normal" : "",
+							"path" : "cobble_mat",
+							"roughness" : ""
+						},
+						"shaderProgram" : "pbr_shader",
+						"texCoordScale" : 2.0,
+						"va" : 0
+					}
+				],
+				"entityName" : "sphere"
+			},
+			{
+				"components" : 
+				[
+					{
+						"componentType" : "Transform",
+						"position" : 
+						[
+							3.119999885559082,
+							2.7049999237060547,
+							0.0
+						],
+						"rotation" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					{
+						"assimp" : 0,
+						"componentType" : "Renderer",
+						"parallaxClipBorders" : true,
+						"parallaxHeight" : 0.10000000149011612,
+						"parallaxMax" : 32,
+						"parallaxMin" : 8,
+						"pbrMat" : 
+						{
+							"albedo" : "",
+							"ao" : "",
+							"displacement" : 0,
+							"metallic" : "",
+							"normal" : "",
+							"path" : "metal_plate_mat",
+							"roughness" : ""
+						},
+						"shaderProgram" : "pbr_shader",
+						"texCoordScale" : 1.0,
+						"va" : "sphere"
+					}
+				],
+				"entityName" : "sphere2"
+			},
+			{
+				"components" : 
+				[
+					{
+						"componentType" : "Transform",
+						"position" : 
+						[
+							-3.994999885559082,
+							2.4900000095367432,
+							-1.309999942779541
+						],
+						"rotation" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"scale" : 
+						[
+							2.0,
+							2.0,
+							2.0
+						]
+					},
+					{
+						"assimp" : 0,
+						"componentType" : "Renderer",
+						"parallaxClipBorders" : true,
+						"parallaxHeight" : 0.10000000149011612,
+						"parallaxMax" : 32,
+						"parallaxMin" : 8,
+						"pbrMat" : 
+						{
+							"albedo" : 
+							[
+								0.19999998807907104,
+								0.5,
+								0.21052625775337219
+							],
+							"ao" : 0,
+							"displacement" : 0,
+							"metallic" : 0.0,
+							"normal" : 0,
+							"path" : "",
+							"roughness" : 0.10000000149011612
+						},
+						"shaderProgram" : "pbr_shader",
+						"texCoordScale" : 1.0,
+						"va" : "sphere"
+					}
+				],
+				"entityName" : "sphere3"
+			},
+			{
+				"components" : 
+				[
+					{
+						"componentType" : "Transform",
+						"position" : 
+						[
+							0.0,
+							0.31999999284744263,
+							0.0
+						],
+						"rotation" : 
+						[
+							-90.0,
+							0.0,
+							0.0
+						],
+						"scale" : 
+						[
+							10.0,
+							10.0,
+							10.0
+						]
+					},
+					{
+						"assimp" : 0,
+						"componentType" : "Renderer",
+						"parallaxClipBorders" : true,
+						"parallaxHeight" : 0.10000000149011612,
+						"parallaxMax" : 32,
+						"parallaxMin" : 8,
+						"pbrMat" : 
+						{
+							"albedo" : "",
+							"ao" : "",
+							"displacement" : "",
+							"metallic" : 0.0,
+							"normal" : "",
+							"path" : "cobble_mat",
+							"roughness" : ""
+						},
+						"shaderProgram" : "pbr_shader",
+						"texCoordScale" : 4.0,
+						"va" : "plane"
+					}
+				],
+				"entityName" : "plane"
+			}
+		],
+		"lightManager" : 
+		{
+			"dirLight" : 
+			{
+				"colour" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				],
+				"direction" : 
+				[
+					-0.20000000298023224,
+					-1.0,
+					-0.30000001192092896
+				],
+				"intensity" : 2.0
+			}
+		},
+		"sceneName" : "TestScene1"
+	}
+}

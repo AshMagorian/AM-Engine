@@ -1,0 +1,72 @@
+add_library(AM_Engine
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/AM_Engine.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Application.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Application.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Environment.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Environment.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Entity.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Entity.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Component.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Component.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/ShaderProgram.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/ShaderProgram.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexArray.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexArray.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexBuffer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexBuffer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Exception.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Exception.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Camera.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Camera.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Texture.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Texture.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/stb_image.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/stb_image.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Renderer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Renderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Resource.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Resource.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Resources.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Resources.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Transform.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Transform.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Lights.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Lights.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/PointLight.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/PointLight.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Spotlight.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Spotlight.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Input.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Input.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/PBR_Material.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/PBR_Material.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/AssimpMesh.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/AssimpMesh.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/AssimpModel.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/AssimpModel.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Skybox.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/SkyBox.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/PrimitiveShape.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/SceneManager.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/SceneManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/DebugUIManager.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/DebugUIManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/OutlineRenderer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/OutlineRenderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/SaveManager.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/SaveManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/MasterRenderer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/MasterRenderer.cpp
+)
+
+if(MSVC)
+  target_link_libraries(AM_Engine
+    glew32 opengl32 OpenAL32 ogg vorbis vorbisfile glfw3 assimp-vc141-mtd imgui jsoncpp
+  )
+else()
+  target_link_libraries(AM_Engine
+    GLU GLEW GL AL ogg vorbis vorbisfile glfw3 assimp-vc141-mtd imgui jsoncpp
+  )
+endif()
+
+target_include_directories (AM_Engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine")
