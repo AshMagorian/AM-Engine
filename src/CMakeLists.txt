@@ -12,8 +12,6 @@ add_library(AM_Engine
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/ShaderProgram.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexArray.h
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexArray.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexBuffer.h
-	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/VertexBuffer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Exception.h
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Exception.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/Camera.h
@@ -57,6 +55,12 @@ add_library(AM_Engine
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/SaveManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/MasterRenderer.h
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/MasterRenderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainRenderer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainRenderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainBlock.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainBlock.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainGrid.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainGrid.cpp
 )
 
 if(MSVC)

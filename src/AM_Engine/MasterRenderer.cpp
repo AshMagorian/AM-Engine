@@ -9,6 +9,7 @@
 #include "Lights.h"
 #include "Camera.h"
 #include "Transform.h"
+#include "TerrainRenderer.h"
 
 void MasterRenderer::Init_Impl(std::weak_ptr<Application> _app, const int& _w, const int& _h)
 {
@@ -18,6 +19,7 @@ void MasterRenderer::Init_Impl(std::weak_ptr<Application> _app, const int& _w, c
 	InitLightingPassUniforms();
 
 	Init_GBuffer(_w, _h);
+	TerrainRenderer::Init(_app);
 }
 
 void MasterRenderer::InitLightingPassUniforms()
@@ -58,6 +60,8 @@ void MasterRenderer::RenderScene_Impl(const int& _width, const int& _height)
 	{
 		(*i)->Display();
 	}
+	TerrainRenderer::RenderTerrain();
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Lighting pass

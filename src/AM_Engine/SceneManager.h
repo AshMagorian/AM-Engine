@@ -7,6 +7,7 @@
 
 class Lights;
 class Entity;
+class TerrainGrid;
 
 struct Scene
 {
@@ -14,6 +15,7 @@ struct Scene
 	std::shared_ptr<Entity> camera;
 	std::list<std::shared_ptr<Entity>> entities;
 	std::shared_ptr<Lights> lightManager;
+	std::shared_ptr<TerrainGrid> terrain;
 	std::string cubemapName;
 	std::weak_ptr<Scene> self;
 	std::weak_ptr<Application> app;

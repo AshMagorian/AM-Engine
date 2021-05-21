@@ -14,6 +14,7 @@ struct TempVertex
 class PrimitiveShape
 {
 private:
+	PrimitiveShape() {}
 	GLuint sphere_id = 0;
 	GLuint plane_id = 0;
 	GLuint cube_id = 0;
@@ -24,15 +25,15 @@ private:
 		return instance;
 	}
 
-	GLuint SetupSphere_Impl(int& indexCount);
-	GLuint SetupPlane_Impl(int& indexCount);
-	GLuint SetupCube_Impl(int& indexCount);
+	inline GLuint SetupSphere_Impl(int& indexCount);
+	inline GLuint SetupPlane_Impl(int& indexCount);
+	inline GLuint SetupCube_Impl(int& indexCount);
 
 public:
 	static GLuint SetupSphere(int& indexCount) { return Get().SetupSphere_Impl(indexCount); }
 	static GLuint SetupPlane(int& indexCount) { return Get().SetupPlane_Impl(indexCount); }
 	static GLuint SetupCube(int& indexCount) { return Get().SetupCube_Impl(indexCount); }
-	static void ComputeTangentBasis(
+	inline static void ComputeTangentBasis(
 		//inputs
 		TempVertex v1,
 		TempVertex v2,

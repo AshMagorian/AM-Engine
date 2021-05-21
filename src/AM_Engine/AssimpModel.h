@@ -8,6 +8,7 @@
 #include "Resource.h"
 
 #define FLIP_TEXTURES 1
+#define NO_TEXTURES 2
 
 class AssimpModel : public Resource
 {
@@ -25,11 +26,7 @@ private:
 	unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 public:
-	AssimpModel(std::string path)
-	{
-		LoadModel(path.c_str());
-	}
-	AssimpModel(std::string path, int flip);
+	AssimpModel(std::string path, const int flip = 0);
 
 	void Draw(std::shared_ptr<ShaderProgram> shader);
 	void DrawOutline(std::shared_ptr<ShaderProgram> shader);

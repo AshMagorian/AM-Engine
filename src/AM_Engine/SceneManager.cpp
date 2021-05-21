@@ -14,6 +14,7 @@ std::shared_ptr<Scene> SceneManager::CreateScene(std::string _name)
 	scene->camera = scene->AddEntity("MainCamera");
 	scene->lightManager = std::make_shared<Lights>();
 	scene->lightManager->m_application = m_app;
+	scene->terrain = std::make_shared<TerrainGrid>();
 
 	m_scenes.push_back(scene);
 	return scene;

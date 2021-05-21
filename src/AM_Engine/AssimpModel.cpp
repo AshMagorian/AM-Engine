@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-AssimpModel::AssimpModel(std::string path, int flip)
+AssimpModel::AssimpModel(std::string path, const int flip)
 {
 	if (flip == FLIP_TEXTURES)
 		stbi_set_flip_vertically_on_load(true);

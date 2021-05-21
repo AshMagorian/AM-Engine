@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 	std::shared_ptr<AssimpModel> backpack_obj = std::make_shared<AssimpModel>("../src/resources/backpack/backpack.obj", FLIP_TEXTURES);
 	application->GetResourceManager()->CreateResource<AssimpModel>(backpack_obj, "backpack_obj");
-	std::shared_ptr<AssimpModel> globe_obj = std::make_shared<AssimpModel>("../src/resources/Old_Antique_Standing_Globe_OBJ/Old_Antique_Standing_Globe_.obj", 0);
+	std::shared_ptr<AssimpModel> globe_obj = std::make_shared<AssimpModel>("../src/resources/Old_Antique_Standing_Globe_OBJ/Old_Antique_Standing_Globe_.obj");
 	application->GetResourceManager()->CreateResource<AssimpModel>(globe_obj, "globe_obj");
 	
 	//application->GetSkybox()->CreateSkybox("bg",
@@ -103,6 +103,9 @@ int main(int argc, char *argv[])
 	assimpTest->GetTransform()->SetScale(glm::vec3(0.02f, 0.02f, 0.02f));
 
 	application->GetSceneManager()->SetStartupScene("Scene1");
+
+	application->GetSceneManager()->GetCurrentScene()->terrain->AddTerrainBlock(0, 0, 
+		application->GetResourceManager()->LoadFromResources<PBR_Material>("cobble_mat"));
 
 	/**
 	*Runs the game loop from application

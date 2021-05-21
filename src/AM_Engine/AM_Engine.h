@@ -10,7 +10,6 @@
 #include "Resources.h"
 #include "Renderer.h"
 #include "ShaderProgram.h"
-#include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "Texture.h"
 #include "Transform.h"
@@ -25,3 +24,4 @@
 #include "DebugUIManager.h"
 #include "AssimpModel.h"
 #include "OutlineRenderer.h"
+#include "TerrainGrid.h"

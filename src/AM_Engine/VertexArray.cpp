@@ -10,7 +10,6 @@ VertexArray::VertexArray()
 {
 	dirty = false;
 
-	buffers.resize(10);
 	glGenVertexArrays(1, &id);
 	if (!id)
 	{
