@@ -25,3 +25,5 @@
 #include "AssimpModel.h"
 #include "OutlineRenderer.h"
 #include "TerrainGrid.h"
+#include "TerrainBlock.h"
+#include "TerrainHeightGenerator.h"

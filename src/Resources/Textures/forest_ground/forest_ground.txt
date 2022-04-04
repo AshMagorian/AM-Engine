@@ -1,0 +1,6 @@
+forest_ground
+diff_map forest_ground_01_diff_1k.png
+n_map forest_ground_01_nor_gl_1k.png
+m 0.0
+r_map forest_ground_01_rough_1k.png
+ao_map forest_ground_01_ao_1k.png

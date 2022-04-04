@@ -110,7 +110,7 @@ void Skybox::CreateSkybox(std::string _name, std::string _path)
 
 	glGenTextures(1, &previewID);
 	glBindTexture(GL_TEXTURE_2D, previewID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 512, 512, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 1024, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -118,7 +118,7 @@ void Skybox::CreateSkybox(std::string _name, std::string _path)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, HDR_id);
-	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
+	glViewport(0, 0, 1024, 1024); // don't forget to configure the viewport to the capture dimensions.
 
 	glm::mat4 captureView = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -180,7 +180,7 @@ GLuint Skybox::MakeCubemapFromHDR(GLuint _hdr_id, GLuint* _captureFBO, GLuint* _
 
 	glBindFramebuffer(GL_FRAMEBUFFER, *_captureFBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, *_captureRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 1024, 1024);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *_captureRBO);
 
 	unsigned int envCubemap;
@@ -190,7 +190,7 @@ GLuint Skybox::MakeCubemapFromHDR(GLuint _hdr_id, GLuint* _captureFBO, GLuint* _
 	{
 		// note that we store each face with 16 bit floating point values
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F,
-			512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+			1024, 1024, 0, GL_RGB, GL_FLOAT, nullptr);
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -218,7 +218,7 @@ GLuint Skybox::MakeCubemapFromHDR(GLuint _hdr_id, GLuint* _captureFBO, GLuint* _
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _hdr_id);
 
-	glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
+	glViewport(0, 0, 1024, 1024); // don't forget to configure the viewport to the capture dimensions.
 	glBindFramebuffer(GL_FRAMEBUFFER, *_captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
@@ -410,6 +410,7 @@ void Skybox::DrawSkybox()
 	glBindVertexArray(vaID);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_currentMap.id);	
+
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 

@@ -82,6 +82,7 @@ std::shared_ptr<Application> const Application::Init(int _w, int _h, int _debugM
 	app->m_saveManager->Init(app->self);
 	app->m_outlineRenderer->Init(app->self);
 	MasterRenderer::Init(app->self, app->m_windowWidth, app->m_windowHeight);
+	TerrainHeightGenerator::Init();
 
 	return app;
 }
@@ -95,6 +96,7 @@ void Application::Run()
 
 		//Update window dimensions
 		glfwGetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
+		m_mainCamera->UpdateCameraVectors();
 		m_mainCamera->UpdateMatrix(m_windowWidth, m_windowHeight);
 
 		m_sceneManager->UpdateScene();

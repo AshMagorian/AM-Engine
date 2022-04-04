@@ -263,6 +263,8 @@ void PBR_Material::ShowUI()
 			ImGui::DragFloat("Parallax height", &m_parallax_height, 0.001f);
 			ImGui::InputInt("Parallax min layers", &m_parallax_minLayers);
 			ImGui::InputInt("Parallax max layers", &m_parallax_maxLayers);
+			ImGui::DragFloat("Parallax adjustment", &m_parallax_adjustment, 0.001f);
+			//ImGui::DragFloat("Parallax height scale adjustment", &m_parallax_heightScaleAdjustment, 0.001f);
 		}
 		ImGui::TreePop();
 	}

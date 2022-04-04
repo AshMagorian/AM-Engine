@@ -331,6 +331,5 @@ void ShaderProgram::SetUniform(std::string uniform, std::shared_ptr<Texture> tex
 	s.id = uniformId;
 	s.texture = texture;
 	samplers.push_back(s);
-
 	glUniform1i(uniformId, samplers.size() - 1);
 }

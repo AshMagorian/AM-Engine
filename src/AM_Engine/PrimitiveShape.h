@@ -229,10 +229,10 @@ GLuint PrimitiveShape::SetupPlane_Impl(int& indexCount)
 	if (plane_id == 0)
 	{
 		// positions
-		glm::vec3 pos1(-1.0f, 1.0f, 0.0f);
-		glm::vec3 pos2(-1.0f, -1.0f, 0.0f);
-		glm::vec3 pos3(1.0f, -1.0f, 0.0f);
-		glm::vec3 pos4(1.0f, 1.0f, 0.0f);
+		glm::vec3 pos1(-1.0f, 1.0f, 0.0f); // bottom left
+		glm::vec3 pos2(-1.0f, -1.0f, 0.0f); // top left
+		glm::vec3 pos3(1.0f, -1.0f, 0.0f); // top right
+		glm::vec3 pos4(1.0f, 1.0f, 0.0f); // bottom right
 		// texture coordinates
 		glm::vec2 uv1(0.0f, 1.0f);
 		glm::vec2 uv2(0.0f, 0.0f);

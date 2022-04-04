@@ -65,6 +65,7 @@ public:
 	glm::vec3 GetRightVector() { return m_rightVector; }
 	glm::vec3 GetForwardVector() { return m_forwardVector; }
 
+	void InvertPitch();
 	void SetFPSCamera(bool _value);
 	void SetWASD(bool _value);
 	void SetRotationSensitivity(float _value) { m_sensitivity = _value; }

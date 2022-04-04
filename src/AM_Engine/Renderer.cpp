@@ -106,14 +106,18 @@ void Renderer::BindPBRValues()
 	else
 		m_shaderProgram->SetUniform("in_pxlVal.ao", 1.0f);
 
-	if (m_pbrMat->GetDisplacement() != nullptr) {
-		m_shaderProgram->SetUniform("in_Material.texture_displacement1", m_pbrMat->GetDisplacement());
+	if (MasterRenderer::IsSimpleRendering() == false)
+	{
+		if (m_pbrMat->GetDisplacement() != nullptr) {
+			m_shaderProgram->SetUniform("in_Material.texture_displacement1", m_pbrMat->GetDisplacement());
 
-		m_shaderProgram->SetUniform("in_Parallax_ClipBorders", (int)m_pbrMat->m_parallax_clipBorders);
-		m_shaderProgram->SetUniform("in_Parallax_Height", m_pbrMat->m_parallax_height);
-		m_shaderProgram->SetUniform("in_Parallax_MinLayers", m_pbrMat->m_parallax_minLayers);
-		m_shaderProgram->SetUniform("in_Parallax_MaxLayers", m_pbrMat->m_parallax_maxLayers);
-		matBinary += 32;
+			m_shaderProgram->SetUniform("in_Parallax_ClipBorders", (int)m_pbrMat->m_parallax_clipBorders);
+			m_shaderProgram->SetUniform("in_Parallax_Height", m_pbrMat->m_parallax_height);
+			m_shaderProgram->SetUniform("in_Parallax_MinLayers", m_pbrMat->m_parallax_minLayers);
+			m_shaderProgram->SetUniform("in_Parallax_MaxLayers", m_pbrMat->m_parallax_maxLayers);
+			m_shaderProgram->SetUniform("in_Parallax_adjustment", m_pbrMat->m_parallax_adjustment);
+			matBinary += 32;
+		}
 	}
 
 	m_shaderProgram->SetUniform("in_MatValue", matBinary);

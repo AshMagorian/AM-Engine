@@ -13,7 +13,7 @@ void TerrainRenderer::Init_Impl(std::weak_ptr<Application> _app)
 	m_app = _app;
 	try
 	{
-		m_terrainGeoPassShader = std::make_shared<ShaderProgram>("terrain.vert", "terrain.frag");
+		m_terrainGeoPassShader = std::make_shared<ShaderProgram>("deferredGeometryTerrain.vert", "deferredGeometryTerrain.frag");
 	}
 	catch (Exception& e)
 	{
@@ -31,4 +31,5 @@ void TerrainRenderer::SetShaderUniforms()
 	m_terrainGeoPassShader->SetUniform("in_View", m_app.lock()->GetCamera()->GetViewMatrix());
 	m_terrainGeoPassShader->SetUniform("in_Projection", m_app.lock()->GetCamera()->GetProjectionMatrix());
 	m_terrainGeoPassShader->SetUniform("in_ViewPos", m_app.lock()->GetCamera()->GetCurrentCamera()->GetTransform()->GetPos());
+	m_terrainGeoPassShader->SetUniform("in_clippingPlane", m_clippingPlane);
 }

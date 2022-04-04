@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "TerrainRenderer.h"
+#include "WaterRenderer.h"
 
 void MasterRenderer::Init_Impl(std::weak_ptr<Application> _app, const int& _w, const int& _h)
 {
@@ -17,9 +18,11 @@ void MasterRenderer::Init_Impl(std::weak_ptr<Application> _app, const int& _w, c
 	m_geometryPassShader = std::make_shared<ShaderProgram>("deferredGeometryPass.vert", "deferredGeometryPass.frag");
 	m_lightingPassShader = std::make_shared<ShaderProgram>("deferredLightingPass.vert", "deferredLightingPass.frag");
 	InitLightingPassUniforms();
+	m_simpleRendering = false;
 
 	Init_GBuffer(_w, _h);
 	TerrainRenderer::Init(_app);
+	WaterRenderer::Init(_app, _w, _h);
 }
 
 void MasterRenderer::InitLightingPassUniforms()
@@ -37,49 +40,127 @@ void MasterRenderer::InitLightingPassUniforms()
 
 void MasterRenderer::RenderScene_Impl(const int& _width, const int& _height)
 {
+	// Update the entity list
 	m_entityList = m_app.lock()->GetSceneManager()->GetCurrentScene()->entities;
 
 	//Check if window size has changed
 	if (_width != m_screenWidth || _height != m_screenHeight)
 	{
 		Init_GBuffer(_width, _height);
+		WaterRenderer::ResetBuffers(_width, _height);
 	}
 
 	// Draw all outlined objects to fill up the stencil buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	m_app.lock()->GetOutlineRenderer()->StencilDraw();
 
-	// Geometry pass: render all geometric/color data to g-buffer 
+	m_simpleRendering = false;
+
+	BindGeometryFramebuffer();
+	RenderGeometryPass();
+	RenderLightingPass();
+	BlitFrameBuffer(gBuffer, 0, m_screenWidth, m_screenHeight, m_screenWidth, m_screenHeight);
+	RenderSkybox();
+
+	m_simpleRendering = true;
+	WaterRenderer::RenderWater();
+
+	m_app.lock()->GetOutlineRenderer()->RenderOutlines();
+}
+
+void MasterRenderer::BindGeometryFramebuffer()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);//To make sure the texture isn't bound
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+	glViewport(0, 0, m_screenWidth, m_screenHeight);
+}
+void MasterRenderer::RenderGeometryPass()
+{
+	// Geometry pass: render all geometric/color data to g-buffer 
 	glClearColor(0.6f, 0.4f, 0.6f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(m_geometryPassShader->GetId());
+	UseGeometryPassShader();
 	m_geometryPassShader->SetUniform("in_ViewPos", m_app.lock()->GetCamera()->GetCurrentCamera()->GetTransform()->GetPos());
-
+	m_geometryPassShader->SetUniform("in_clippingPlane", m_clippingPlane);
 	for (std::list<std::shared_ptr<Entity>>::iterator i = m_entityList.begin(); i != m_entityList.end(); ++i)
 	{
 		(*i)->Display();
 	}
 	TerrainRenderer::RenderTerrain();
-
+	// Reset to the default FrameBuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
-	// Lighting pass
-	glUseProgram(m_lightingPassShader->GetId());
+int MasterRenderer::UseGeometryPassShader()
+{
+	int id = m_geometryPassShader->GetId();
+	glUseProgram(id);
+	return id;
+}
+
+void MasterRenderer::RenderLightingPass()
+{
+	UseLightPassShader();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	BindGBufferTextures();
-	m_app.lock()->GetSceneManager()->GetCurrentScene()->lightManager->SetLightingUniforms(m_lightingPassShader);
+	BindIBLTextures();
+	SetLightingUniforms();
 	RenderQuad();
+}
 
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+void MasterRenderer::UseLightPassShader()
+{
+	glUseProgram(m_lightingPassShader->GetId());
+}
+
+void MasterRenderer::BindGBufferTextures()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gPosition);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, gNormal);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, gAlbedo);
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, gMRA);
+}
+
+void MasterRenderer::BindIBLTextures()
+{
+	// binds IBL maps
+	std::string mapName = m_app.lock()->GetSkybox()->GetCurrentMapName();
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, PBR_Material::GetIrradiance(mapName));
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, PBR_Material::GetPrefilter(mapName));
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, PBR_Material::GetBRDF());
+}
+
+void MasterRenderer::SetLightingUniforms()
+{
+	m_app.lock()->GetSceneManager()->GetCurrentScene()->lightManager->SetLightingUniforms(m_lightingPassShader);
+}
+
+void MasterRenderer::BlitFrameBuffer(const int& _srcBuffer, const int& _dstBuffer, const int& _srcW, const int& _srcH, const int& _dstW, const int& _dstH)
+{
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, _srcBuffer); // read from the gBuffer
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _dstBuffer); // write to default framebuffer
 	glBlitFramebuffer(
-		0, 0, m_screenWidth, m_screenHeight, 0, 0, m_screenWidth, m_screenHeight, GL_DEPTH_BUFFER_BIT, GL_NEAREST
+		0, 0, _srcW, _srcH, 0, 0, _dstW, _dstH, GL_DEPTH_BUFFER_BIT, GL_NEAREST
 	);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
+void MasterRenderer::RenderSkybox()
+{
 	m_app.lock()->GetSkybox()->DrawSkybox();
-	m_app.lock()->GetOutlineRenderer()->RenderOutlines();
+}
+
+void MasterRenderer::SetClippingPlane(glm::vec4 _plane)
+{
+	m_clippingPlane = _plane;
+	TerrainRenderer::Get().SetClippingPlane(_plane);
 }
 
 void MasterRenderer::Init_GBuffer(const int& _w, const int& _h)
@@ -87,7 +168,6 @@ void MasterRenderer::Init_GBuffer(const int& _w, const int& _h)
 	m_screenWidth = _w; m_screenHeight = _h;
 	glGenFramebuffers(1, &gBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-
 	// - position color buffer
 	glGenTextures(1, &gPosition);
 	glBindTexture(GL_TEXTURE_2D, gPosition);
@@ -127,33 +207,12 @@ void MasterRenderer::Init_GBuffer(const int& _w, const int& _h)
 	// create and attach depth buffer (renderbuffer)
 	glGenRenderbuffers(1, &rboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_screenWidth, m_screenWidth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_screenWidth, m_screenHeight);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 	// Check to see if the frame buffer is complete
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Framebuffer not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void MasterRenderer::BindGBufferTextures()
-{
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, gPosition);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, gNormal);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, gAlbedo);
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, gMRA);
-
-	// binds IBL maps
-	std::string mapName = m_app.lock()->GetSkybox()->GetCurrentMapName();
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, PBR_Material::GetIrradiance(mapName));
-	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, PBR_Material::GetPrefilter(mapName));
-	glActiveTexture(GL_TEXTURE6);
-	glBindTexture(GL_TEXTURE_2D, PBR_Material::GetBRDF());
 }
 
 void MasterRenderer::RenderQuad()

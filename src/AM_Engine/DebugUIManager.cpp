@@ -1,6 +1,8 @@
 #include <AM_Engine/AM_Engine.h>
 #include "SaveManager.h"
 #include "MasterRenderer.h"
+#include "WaterRenderer.h"
+#include "WaterBuffers.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -156,6 +158,111 @@ void DebugUIManager::Tick(std::list<std::shared_ptr<Entity>> _entities, int _wid
 		ImGui::Image((void*)(intptr_t)id, ImVec2(200, 200), uv_min, uv_max, tint_col, border_col);
 		
 	}
+	// Terrain editor
+	if (ImGui::CollapsingHeader("Terrain"))
+	{
+		ImGui::Text("Parallax Settings");
+		ImGui::DragFloat("Height", &(currentScene->terrain->m_parallax_Height), 0.005f);
+
+		// Grid selector
+		static char selected = 12;
+		for (int y = 0; y < 5; y++)
+		{
+			for (int x = 0; x < 5; x++)
+			{
+				if (x > 0)
+					ImGui::SameLine();
+				char name[32];
+				sprintf(name, "(%i,%i)", x - 2, 2 - y);
+
+
+				ImGui::PushID(y * 5 + x);
+				if (ImGui::Selectable(name, selected == y * 5 + x, 0, ImVec2(50, 50)))
+				{
+					// Toggle clicked cell 
+					selected = y * 5 + x;
+				}
+				ImGui::PopID();
+			}
+		}
+		int blockX = (selected % 5) - 2;
+		int blockY = (2 - (selected / 5));
+		ImGui::Text("The block currently selected is (%i,%i)", blockX, blockY);
+		bool blockFound = false;
+		for (std::list<std::shared_ptr<TerrainBlock>>::iterator i = currentScene->terrain->m_terrainBlocks.begin(); i != currentScene->terrain->m_terrainBlocks.end(); ++i)
+		{
+			// If the selected grid tile matches the one in the list
+			if ((*i)->m_gridPosX == blockX && (*i)->m_gridPosZ == -blockY)
+			{
+				blockFound = true;
+
+				//Display the blend map here
+				if ((*i)->m_blendMap != nullptr)
+				{
+					ImVec2 uv_min = ImVec2(0.0f, 1.0f);                 // Top-left
+					ImVec2 uv_max = ImVec2(1.0f, 0.0f);                 // Lower-right
+					ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+					ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
+					ImGui::Text("Blend Map");
+					ImGui::Image((void*)(intptr_t)(*i)->m_blendMap->getId(), ImVec2(200, 200), uv_min, uv_max, tint_col, border_col);
+				}
+
+				ImGui::DragFloat("TexCoord Scale", &m_app.lock()->GetSceneManager()->GetCurrentScene()->terrain->m_texCoordScale, 0.01f);
+
+				char* colours[] = { "black", "red", "green", "blue" };
+
+				for (int blendIndex = 0; blendIndex < 4; ++blendIndex)
+				{
+					char name[32];
+					sprintf(name, "Material %i (%s)", blendIndex ,colours[blendIndex]);
+					if (ImGui::TreeNode(name))
+					{
+						ImGui::DragFloat("Height adjustment", &((*i)->m_material[blendIndex]->m_parallax_adjustment), 0.005f);
+						ImGui::DragFloat("Height scale adjustment", &((*i)->m_material[blendIndex]->m_parallax_heightScaleAdjustment), 0.001f);
+
+						if (ImGui::TreeNode("PBR Material"))
+						{
+							//ImGui::DragFloat("TexCoord Scale", &m_texCoordScale, 0.01f);
+							(*i)->m_material[blendIndex]->ShowUI();
+							ImGui::TreePop();
+						}
+						else
+						{
+							ImGui::SameLine(150);
+							if (ImGui::SmallButton("Select PBR Material##b"))
+								ImGui::OpenPopup("pbr_popup");
+						}
+						if (ImGui::BeginPopup("pbr_popup"))
+						{
+							ImGui::Text("PBR Materials");
+							ImGui::Separator();
+
+							std::list<std::shared_ptr<PBR_Material>> list;
+							m_app.lock()->GetResourceManager()->GetAll(&list);
+							for (std::list<std::shared_ptr<PBR_Material>>::iterator j = list.begin(); j != list.end(); ++j)
+							{
+								if (ImGui::Selectable((*j)->GetName().c_str()))
+									(*i)->m_material[blendIndex] = m_app.lock()->GetResourceManager()->LoadFromResources<PBR_Material>((*j)->GetName());
+							}
+							ImGui::EndPopup();
+						}
+						ImGui::TreePop();
+					}
+
+				}
+
+			}
+			
+		}
+		if (blockFound == false)
+		{
+			if (ImGui::SmallButton("add terrain block"))
+			{
+				m_app.lock()->GetSceneManager()->GetCurrentScene()->terrain->AddTerrainBlock(blockX, -blockY,
+					m_app.lock()->GetResourceManager()->LoadFromResources<PBR_Material>("grass"));
+			}
+		}
+	}
 	if (ImGui::CollapsingHeader("DebugTextures"))
 	{
 		ImVec2 uv_min = ImVec2(0.0f, 1.0f);                 // Top-left
@@ -170,6 +277,11 @@ void DebugUIManager::Tick(std::list<std::shared_ptr<Entity>> _entities, int _wid
 		ImGui::Image((void*)(intptr_t)MasterRenderer::Get().gAlbedo, ImVec2(200, 200), uv_min, uv_max, tint_col, border_col);
 		ImGui::Text("MRA");
 		ImGui::Image((void*)(intptr_t)MasterRenderer::Get().gMRA, ImVec2(200, 200), uv_min, uv_max, tint_col, border_col);
+		ImGui::Text("Reflection texture");
+		ImGui::Image((void*)(intptr_t)WaterRenderer::Get().m_waterBuffers->GetReflectionDepthTexture(), ImVec2(200, 200), uv_min, uv_max, tint_col, border_col);
+		ImGui::Text("Refraction texture");
+		ImGui::Image((void*)(intptr_t)WaterRenderer::Get().m_waterBuffers->GetRefractionDepthTexture(), ImVec2(200, 200), uv_min, uv_max, tint_col, border_col);
+
 
 	}
 	ImGui::End();

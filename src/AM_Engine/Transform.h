@@ -36,6 +36,14 @@ public:
 	void SetRotation(glm::vec3 _rot) { m_rotation = _rot; }
 	void SetScale(glm::vec3 _sca) { m_scale = _sca; }
 
+	void SetPosX(float _pos) { m_position.x = _pos; }
+	void SetPosY(float _pos) { m_position.y = _pos; }
+	void SetPosZ(float _pos) { m_position.z = _pos; }
+
+	void SetRotationX(float _rot) { m_rotation.x = _rot; }
+	void SetRotationY(float _rot) { m_rotation.y = _rot; }
+	void SetRotationZ(float _rot) { m_rotation.z = _rot; }
+
 	glm::mat4 GetModelMatrix();
 	glm::mat4 GetRotationMatrix();
 	glm::mat4 GetNormalMatrix();

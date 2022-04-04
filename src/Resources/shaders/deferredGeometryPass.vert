@@ -13,6 +13,7 @@ out VS_OUT {
 } vs_out;
 
 uniform float in_TexCoordScale;
+uniform vec4 in_clippingPlane;
 uniform mat4 in_View;
 uniform mat4 in_Projection;
 uniform mat4 in_Model;
@@ -20,7 +21,11 @@ uniform mat4 in_NormalMtx;
 
 void main()
 {
-	vs_out.FragPos = vec3(in_Model * vec4(in_Position, 1.0));
+	vec4 worldPosition = in_Model * vec4(in_Position, 1.0);
+	
+	gl_ClipDistance[0] = dot(worldPosition, in_clippingPlane);
+	
+	vs_out.FragPos = vec3(worldPosition);
 	vs_out.TexCoord = in_TexCoord * in_TexCoordScale;
 	vec3 normal = mat3(in_NormalMtx) * in_Normal;  
 	vs_out.Normal = normal;

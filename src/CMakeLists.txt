@@ -61,6 +61,14 @@ add_library(AM_Engine
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainBlock.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainGrid.h
 	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainGrid.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainHeightGenerator.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/TerrainHeightGenerator.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/WaterRenderer.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/WaterRenderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/WaterBuffers.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/WaterBuffers.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/WaterTile.h
+	${CMAKE_CURRENT_SOURCE_DIR}/AM_Engine/WaterTile.cpp
 )
 
 if(MSVC)

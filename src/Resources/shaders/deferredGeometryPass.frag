@@ -36,6 +36,7 @@ uniform int in_Parallax_ClipBorders;
 uniform float in_Parallax_Height;
 uniform int in_Parallax_MinLayers;
 uniform int in_Parallax_MaxLayers;
+uniform float in_Parallax_adjustment;
 
 uniform vec3 in_ViewPos;
 
@@ -132,13 +133,15 @@ vec2 ParallaxMapping(vec2 texCoord, vec3 viewDir)
     // get initial values
     vec2  currentTexCoords     = texCoord;
     float currentDepthMapValue = texture(in_Material.texture_displacement1, currentTexCoords).r;
+	currentDepthMapValue += in_Parallax_adjustment;
       
     while(currentLayerDepth < currentDepthMapValue)
     {
         // shift texture coordinates along direction of P
         currentTexCoords -= deltaTexCoords;
         // get depthmap value at current texture coordinates
-        currentDepthMapValue = texture(in_Material.texture_displacement1, currentTexCoords).r;  
+        currentDepthMapValue = texture(in_Material.texture_displacement1, currentTexCoords).r; 
+		currentDepthMapValue += in_Parallax_adjustment;		
         // get depth of next layer
         currentLayerDepth += layerDepth;  
     }

@@ -20,9 +20,6 @@ void Camera::UpdateMatrix(int _w, int _h)
 		{
 			throw Exception("Camera not found");
 		}
-
-		UpdateCameraVectors();
-
 		m_projectionMatrix = glm::perspective(glm::radians(m_viewAngle),
 			(float)_w / (float)_h, 0.1f, 100.f);
 		m_viewMatrix = glm::inverse(m_currentCamera->GetTransform()->GetModelMatrix());
@@ -97,6 +94,13 @@ void Camera::UpdateWASDMovement()
 	{
 		m_currentCamera->GetTransform()->SetPos(m_currentCamera->GetTransform()->GetPos() + (m_movementSpeed * m_app.lock()->GetDeltaTime() * glm::normalize(totalMovement)));
 	}
+}
+
+void Camera::InvertPitch()
+{
+	m_app.lock()->GetSceneManager()->GetCurrentScene()->camera->GetTransform()->GetRotation().x;
+	float pitch = m_app.lock()->GetSceneManager()->GetCurrentScene()->camera->GetTransform()->GetRotation().x;
+	m_app.lock()->GetSceneManager()->GetCurrentScene()->camera->GetTransform()->SetRotationX(-pitch);
 }
 
 void Camera::SetFPSCamera(bool _value)

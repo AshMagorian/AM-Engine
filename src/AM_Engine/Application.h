@@ -58,5 +58,7 @@ public:
 	std::shared_ptr<SceneManager> GetSceneManager() { return m_sceneManager; }
 	std::shared_ptr<SaveManager> GetSaveManager() { return m_saveManager; }
 	std::shared_ptr<OutlineRenderer> GetOutlineRenderer() { return m_outlineRenderer; }
+	int GetWindowWidth() { return m_windowWidth; }
+	int GetWindowHeight() { return m_windowHeight; }
 	float GetDeltaTime();
 };

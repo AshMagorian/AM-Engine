@@ -20,6 +20,8 @@ struct IBL_data
 class PBR_Material : public Resource
 {
 	friend class Renderer;
+	friend class TerrainGrid;
+	friend class DebugUIManager;
 private:
 	std::shared_ptr<Texture> m_albedo;
 	std::shared_ptr<Texture> m_normal;
@@ -42,6 +44,8 @@ private:
 	float m_parallax_height = 0.1f;
 	int m_parallax_minLayers = 8;
 	int m_parallax_maxLayers = 32;
+	float m_parallax_adjustment = 0;
+	float m_parallax_heightScaleAdjustment = 1;
 
 	void SplitStringWhitespace(std::string& input, std::vector<std::string>& output);
 	static void MakeBRDFTex();

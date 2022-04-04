@@ -1,0 +1,6 @@
+grass
+diff_map grass1-albedo3.png
+n_map grass1-normal1-dx.png
+m 0.0
+r_map grass1-rough.png
+ao_map grass1-ao.png
